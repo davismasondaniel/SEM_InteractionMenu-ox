@@ -52,7 +52,14 @@ AddEventHandler('SEM_InteractionMenu:DragNear', function(ID)
 	
 	if ID ~= false and ID ~= source then
 		TriggerClientEvent('SEM_InteractionMenu:Drag', ID, source)
+		TriggerClientEvent('SEM_InteractionMenu:OfficerDragAnim', source)
 	end
+end)
+
+RegisterServerEvent('SEM_InteractionMenu:UndragPlayer')
+AddEventHandler('SEM_InteractionMenu:UndragPlayer', function()
+    local source = source
+    TriggerClientEvent('SEM_InteractionMenu:Drag', source, -1)
 end)
 
 RegisterServerEvent('SEM_InteractionMenu:SeatNear')
@@ -66,30 +73,60 @@ AddEventHandler('SEM_InteractionMenu:UnseatNear', function(ID, Vehicle)
 end)
 
 RegisterServerEvent('SEM_InteractionMenu:Jail')
-AddEventHandler('SEM_InteractionMenu:Jail', function(ID, Time)
-	if ID == -1 or ID == '-1' then
-		if source ~= '' then
-			print('^1[#' .. source .. '] ' .. GetPlayerName(source) .. '  -  attempted to jail all players^7')
-			DropPlayer(source, '\n[SEM_InteractionMenu] Attempting to jail all players')
-		else
-			print('^1Someone attempted to jail all players^7')
-		end
+AddEventHandler('SEM_InteractionMenu:Jail', function(ID, Time, Charges)
+    local source = source
+    local targetPlayer = tonumber(ID)
 
-		return
-	end
-	
-	TriggerClientEvent('SEM_InteractionMenu:JailPlayer', ID, Time)
-	TriggerClientEvent('chatMessage', -1, 'Judge', {86, 96, 252}, GetPlayerName(ID) .. ' has been Jailed for ' .. Time .. ' months(s)')
+    if targetPlayer == -1 or targetPlayer == '-1' then
+        print('^1[#' .. source .. '] ' .. GetPlayerName(source) .. '  -  attempted to jail all players^7')
+        DropPlayer(source, '\n[SEM_InteractionMenu] Attempting to jail all players')
+        return
+    end
+
+    if not targetPlayer then
+        TriggerClientEvent('ox_lib:notify', source, {
+            title = 'Error',
+            description = 'Invalid player ID',
+            type = 'error'
+        })
+        return
+    end
+
+    local targetPlayerObj = GetPlayerPed(targetPlayer)
+
+    if not DoesEntityExist(targetPlayerObj) then
+        TriggerClientEvent('ox_lib:notify', source, {
+            title = 'Error',
+            description = 'Player with ID ' .. ID .. ' is not in the game',
+            type = 'error'
+        })
+        return
+    end
+    
+    TriggerClientEvent('SEM_InteractionMenu:JailPlayer', targetPlayer, Time)
+    
+    TriggerClientEvent('ox_lib:notify', -1, {
+        title = 'Judge',
+        description = GetPlayerName(targetPlayer) .. ' has been Jailed for ' .. Time .. ' month(s)',
+        type = 'inform'
+    })
+
+    TriggerClientEvent('ox_lib:notify', -1, {
+        title = 'Judge',
+        description = 'Charges: ' .. Charges,
+        type = 'inform'
+    })
+
+    TriggerClientEvent('ox_lib:notify', source, {
+        title = 'Success',
+        description = 'Player ' .. ID .. ' Jailed for ' .. Time .. ' seconds | Charges: ' .. Charges,
+        type = 'success'
+    })
 end)
 
 RegisterServerEvent('SEM_InteractionMenu:Unjail')
 AddEventHandler('SEM_InteractionMenu:Unjail', function(ID)
 	TriggerClientEvent('SEM_InteractionMenu:UnjailPlayer', ID)
-end)
-
-RegisterServerEvent('SEM_InteractionMenu:Backup')
-AddEventHandler('SEM_InteractionMenu:Backup', function(Code, StreetName, Coords)
-	TriggerClientEvent('SEM_InteractionMenu:CallBackup', -1, Code, StreetName, Coords)
 end)
 
 RegisterServerEvent('SEM_InteractionMenu:Ads')
@@ -190,10 +227,10 @@ local resourceName =
     ____) | |  |___  |  |  \    /  |  |
    \_____/  |______| |__|   \__/   |__|^7
        	   InteractionMenu
-	  Created By Scott M
+Created By Scott M & Modified By: Liam (IOwnSpaceX)
 ]]
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	local currentVersion = GetResourceMetadata(GetCurrentResourceName(), 'version', 0)
 
 	function VersionCheckHTTPRequest()
@@ -201,7 +238,7 @@ Citizen.CreateThread(function()
 	end
 
 	function VersionCheck(err, response, headers)
-		Citizen.Wait(3000)
+		Wait(3000)
 		if err == 200 then
 			local data = json.decode(response)
 			

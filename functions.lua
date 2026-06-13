@@ -30,7 +30,7 @@ end
 function LoadAnimation(Dict)
     while not HasAnimDictLoaded(Dict) do
         RequestAnimDict(Dict)
-        Citizen.Wait(5)
+        Wait(5)
     end
 end
 
@@ -40,16 +40,16 @@ function KeyboardInput(TextEntry, MaxStringLenght)
 	BlockInput = true
 
 	while UpdateOnscreenKeyboard() ~= 1 and UpdateOnscreenKeyboard() ~= 2 do
-		Citizen.Wait(0)
+		Wait(0)
 	end
 		
 	if UpdateOnscreenKeyboard() ~= 2 then
 		local Result = GetOnscreenKeyboardResult()
-		Citizen.Wait(500)
+		Wait(500)
 		BlockInput = false
 		return Result
 	else
-		Citizen.Wait(500)
+		Wait(500)
 		BlockInput = false
 		return nil
 	end
@@ -68,7 +68,10 @@ function GetClosestPlayer()
         end
     end
 
-    Notify('~r~No Player Nearby!')
+    lib.notify({
+        title = 'No Player Nearby!',
+        type = 'error',
+    })
     return false
 end
 
@@ -82,10 +85,13 @@ end
 --LEO Functions
 function ToggleRadar()
     if Config.Radar ~= 0 then
-        if IsPedInAnyVehicle(GetPlayerPed(-1)) then
-            if GetVehicleClass(GetVehiclePedIsIn(GetPlayerPed(-1))) == 18 then
-                if GetPedInVehicleSeat(GetVehiclePedIsIn(GetPlayerPed(-1)) == -1) then
-                    _MenuPool:CloseAllMenus()
+        local ped = GetPlayerPed(-1)
+
+        if IsPedInAnyVehicle(ped) then
+            local veh = GetVehiclePedIsIn(ped)
+
+            if GetVehicleClass(veh) == 18 then
+                if GetPedInVehicleSeat(veh, -1) == ped then
                     if Config.Radar == 1 then
                         TriggerEvent('wk:openRemote')
                     elseif Config.Radar == 2 then
@@ -116,14 +122,14 @@ function EnableShield()
     
     RequestAnimDict('combat@gestures@gang@pistol_1h@beckon')
     while not HasAnimDictLoaded('combat@gestures@gang@pistol_1h@beckon') do
-        Citizen.Wait(100)
+        Wait(100)
     end
 
     TaskPlayAnim(Ped, 'combat@gestures@gang@pistol_1h@beckon', '0', 8.0, -8.0, -1, (2 + 16 + 32), 0.0, 0, 0, 0)
 
     RequestModel(GetHashKey('prop_ballistic_shield'))
     while not HasModelLoaded(GetHashKey('prop_ballistic_shield')) do
-        Citizen.Wait(100)
+        Wait(100)
     end
 
     local shield = CreateObject(GetHashKey('prop_ballistic_shield'), PedPos.x, PedPos.y, PedPos.z, 1, 1, 1)
@@ -142,16 +148,20 @@ function EnableShield()
     SetEnableHandcuffs(Ped, true)
 end
 
-Citizen.CreateThread(function()
+CreateThread(function()
     while true do
-        Citizen.Wait(1)
+        local sleep = 500
 
         if ShieldActive == true then
+            sleep = 0
             DisableControlAction(1, 23, true) --F | Enter Vehicle
             DisableControlAction(1, 75, true) --F | Exit Vehicle
         end
+
+        Wait(sleep)
     end
 end)
+
 
 function DisableShield()
     local Ped = GetPlayerPed(-1)
@@ -200,7 +210,7 @@ function SpawnVehicle(Veh, Name, Livery, Extras)
     while not HasModelLoaded(Model) do
         CancelEvent()
         RequestModel(Model)
-        Citizen.Wait(100)
+        Wait(100)
 
         WaitTime = WaitTime + 1
 
@@ -238,15 +248,19 @@ function SpawnVehicle(Veh, Name, Livery, Extras)
     end
 end
 
-function DeleteVehicle(entity)
-    Citizen.InvokeNative( 0xEA386986E786A54F, Citizen.PointerValueIntInitialized(entity))
+function DeleteCurrentVehicle(entity)
+    if entity and DoesEntityExist(entity) then
+        SetEntityAsMissionEntity(entity, true, true)
+        DeleteEntity(entity)
+    end
 end
+
 
 
 
 --Ped Functions
 function LoadPed(Hash)
-    Citizen.CreateThread(function()
+    CreateThread(function()
         local Model = GetHashKey(Hash)
         RequestModel(Model)
 
@@ -285,7 +299,7 @@ function SpawnProp(Object, Name)
 
     RequestModel(Object)
     while not HasModelLoaded(Object) do
-        Citizen.Wait(0)
+        Wait(0)
     end
 
     local OffsetCoords = GetOffsetFromEntityInWorldCoords(Player, 0.0, 0.75, 0.0)
@@ -299,9 +313,9 @@ function SpawnProp(Object, Name)
 
     Notify('Press ~g~E ~w~to place\nPress ~r~R ~w~to cancel')
 
-    Citizen.CreateThread(function()
+    CreateThread(function()
         while true do
-            Citizen.Wait(0)
+            Wait(0)
 
             local OffsetCoords = GetOffsetFromEntityInWorldCoords(Player, 0.0, 0.75, 0.0)
             local Heading = GetEntityHeading(Player)
@@ -320,7 +334,7 @@ function SpawnProp(Object, Name)
 
                 RequestModel(Object)
                 while not HasModelLoaded(Object) do
-                    Citizen.Wait(0)
+                    Wait(0)
                 end
 
                 local Prop = CreateObjectNoOffset(Object, PropCoords, true, true, true)

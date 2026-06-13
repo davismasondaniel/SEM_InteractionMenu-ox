@@ -13,8 +13,6 @@
 
 Config = {}
 
-
-
 ---------------------------------------------------------------
 --                                                           --
 --                      Menu Features                        --
@@ -23,7 +21,7 @@ Config = {}
 
 --This is how the version check will be displayed in the server console
 --Full = 0 [Default] | Simple = 1 | Disabled = 2
-Config.VersionChecker = 0
+Config.VersionChecker = 2
 
 --This is how you open the menu either via a command or button
 --Button = 0 [Default]  |  Command = 1
@@ -32,7 +30,7 @@ Config.OpenMenu = 0
 --This is the button that will open the menu (If chosen at Config.OpenMenu)
 --Default = 244 [M]  |  To change the button check out https://docs.fivem.net/game-references/controls/
 --Controller Support for this resource is DISABLED!
-Config.MenuButton = 244
+Config.MenuButton = 170
 
 --This is the command that will open the menu (If chosen at Config.OpenMenu)
 Config.Command = 'semmenu'
@@ -55,22 +53,6 @@ Config.MenuTitle = 0
 --This is the custom title you can set for the menu (If chosen at Config.MenuTitle)
 Config.MenuTitleCustom = 'Custom Menu Title'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ---------------------------------------------------------------
 --                                                           --
 --                 General/Shared Features                   --
@@ -92,17 +74,10 @@ Config.CommandDistance = 50
 
 --This determines if the stations section of the LEO & Fire menu will be visible
 --Station Locations can be set at Config.LEOStations & Config.FireStations
-Config.ShowStations = true
+Config.ShowStations = false
 
 --This determines if the stations menu will have a teleport section, if set to false ONLY the waypoint option will be visible
-Config.AllowStationTeleport = true
-
---This determines if the stations set in the Config.LEOStations & Config.FireStations have blips on the map
-Config.DisplayStationBlips = true
-
---This sets where the station blips will be displayed (Mini Map / Main Map)
---On Mini Map & Main Map = 0 [Default]  |  Only on Main Map = 1  |  Only on Mini Map = 2
-Config.StationBlipsDispalyed = 0
+Config.AllowStationTeleport = false
 
 --These are the props avaliable via the LEO & Fire menus
 Config.Props = {
@@ -123,22 +98,6 @@ Config.Props = {
     {name = 'Tent', spawncode = 'prop_gazebo_02'},
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ---------------------------------------------------------------
 --                                                           --
 --                        LEO Features                       --
@@ -148,7 +107,7 @@ Config.Props = {
 --This sets who can access the LEO menu
 --!!! NOTE: If LEO Peds is selected then onlys peds from the Config.LEOUniforms will have access to the menu
 --Disabled = 0 | Everyone = 1 [Default]  |  LEO Peds = 2  |  Onduty Command = 3  |  Ace Permissions = 4
-Config.LEOAccess = 1
+Config.LEOAccess = 3
 
 --This determines if the radar button will be displayed
 --NOTE: Wraith Radar is the ONLY radar script that works with the menu at the moment (This also includes any editied version) - Both his old and new radar are compatiable, link below
@@ -162,7 +121,7 @@ Config.LEOAccess = 1
     **Other modified version of these resoruce should work**
 ]]
 --Disabled = 0 [Default] | Wraith ARS 2x = 1 |  WraithRS = 2
-Config.Radar = 0
+Config.Radar = 1
 
 --This determines when someone if cuffed if they can enter or exit a vehicle
 Config.VehEnterCuffed = false
@@ -171,26 +130,19 @@ Config.VehEnterCuffed = false
 --Disabled = 0 | Constant = 1  |  Free-hand = 2 [Default]
 --Constant = Once unracked it is unable to be removed from hand until racked again in a vehicle
 --Free-hand = Once unracked it is able to be removed from hand
-Config.UnrackWeapons = 2
+Config.UnrackWeapons = 0
 
 --This sets if the Jail functions will be visible in the menu
 Config.LEOJail = true
 
 --This is the max time that someone can be jailed for (Seconds)
-Config.MaxJailTime = 300
+Config.MaxJailTime = 99999
 
 --These is the location of the jail and release point
 Config.JailLocation = {
     Jail = {x = 1675.28, y = 2648.55, z = 45.56, h = 49.50},
     Release = {x = 1851.24, y = 2585.77, z = 45.67, h = 271.44},
 }
-
---This determines if the backup section of the LEO menu will be visible
-Config.DisplayBackup = true
-
---This sets the time between the blip being created and removed (Minutes)
---Default = 5
-Config.BackupBlipTimeout = 5
 
 --This determines if the LEO props menu will be available
 Config.DisplayProps = true
@@ -209,7 +161,7 @@ Config.LEOStations = {
 }
 
 --This determines if the LEO Unfiroms section will be visible
-Config.DisplayLEOUniforms = true
+Config.DisplayLEOUniforms = false
 
 --These are the LEO uniforms that are available via the loadouts - these will also be the uniforms which will give access to the LEO menu if that option if chosen at Config.LEOAccess
 Config.LEOUniforms = {
@@ -228,7 +180,7 @@ Config.LEOUniforms = {
 }
 
 --This determines if the LEO Loadouts section will be visible
-Config.DisplayLEOLoadouts = true
+Config.DisplayLEOLoadouts = false
 
 --These are the weapon loadouts available via the loadouts
 Config.LEOLoadouts = {
@@ -270,10 +222,10 @@ Config.LEOLoadouts = {
 }
 
 --This determines if the LEO vehicles section if available
-Config.ShowLEOVehicles = true
+Config.ShowLEOVehicles = false
 
 --This determines if the vehicle spawn codes are displayed next to the name
-Config.ShowLEOSpawnCode = true
+Config.ShowLEOSpawnCode = false
 
 --These are the LEO vehicles which are avaiable via the menu
 Config.LEOVehiclesCategories = {
@@ -309,23 +261,7 @@ Config.LEOVehiclesCategories = {
 }
 
 --This determines if the ai traffic manager will can accessible
-Config.DisplayTrafficManager = true
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Config.DisplayTrafficManager = false
 
 ---------------------------------------------------------------
 --                                                           --
@@ -336,13 +272,13 @@ Config.DisplayTrafficManager = true
 --This sets who can access the Fire menu
 --!!! NOTE: If Fire Peds is selected then onlys peds from the Config.FireUniforms will have access to the menu
 --Disabled = 0 | Everyone = 1 [Default]  |  Fire Peds = 2  |  Onduty Command = 3  |  Ace Permissions = 4
-Config.FireAccess = 1
+Config.FireAccess = 3
 
 --This sets if the Hospitalize functions will be visible in the menu
 Config.FireHospital = true
 
 --This is the max time that someone can be hospitalized for (Seconds)
-Config.MaxHospitalTime = 300
+Config.MaxHospitalTime = 99999
 
 --These is the location of the hospital and release point
 --I would recommend using a MLO Interior/Ymap for the hospital
@@ -377,7 +313,7 @@ Config.HospitalStations = {
 }
 
 --This determines if the LEO Unfiroms section will be visible
-Config.DisplayFireUniforms = true
+Config.DisplayFireUniforms = false
 
 --These are the Fire uniforms that are available via the loadouts - these will also be the uniforms which will give access to the Fire menu if that option if chosen at Config.FireAccess
 Config.FireUniforms = {
@@ -393,13 +329,13 @@ Config.FireUniforms = {
 }
 
 --This determines if the LEO Loadouts section will be visible
-Config.DisplayFireLoadouts = true
+Config.DisplayFireLoadouts = false
 
 --This determines if the Fire vehicles section if available
-Config.ShowFireVehicles = true
+Config.ShowFireVehicles = false
 
 --This determines if the vehicle spawn codes are displayed next to the name
-Config.ShowFireSpawnCode = true
+Config.ShowFireSpawnCode = false
 
 --These are the Fire vehicles which are avaiable via the menu
 Config.FireVehicles = {
@@ -420,22 +356,6 @@ Config.FireVehicles = {
 	{name = 'Ambulance', spawncode = 'ambulance'},
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ---------------------------------------------------------------
 --                                                           --
 --                     Civilian Features                     --
@@ -448,10 +368,10 @@ Config.FireVehicles = {
 Config.CivAccess = 1
 
 --This determines if the Civilian vehicles section if available
-Config.ShowCivVehicles = true
+Config.ShowCivVehicles = false
 
 --This determines if the vehicle spawn codes are displayed next to the name
-Config.ShowCivSpawnCode = true
+Config.ShowCivSpawnCode = false
 
 --These are the Civilian vehicles which are avaiable via the menu
 Config.CivVehicles = {
@@ -515,22 +435,6 @@ Config.CivAdverts = {
     {name = 'YouTube', loc = 'CHAR_YOUTUBE', file = 'CHAR_YOUTUBE'},
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ---------------------------------------------------------------
 --                                                           --
 --                      Vehicle Features                     --
@@ -539,26 +443,10 @@ Config.CivAdverts = {
 
 --This sets when players can access the vehicle menu
 --Disabled = 0 | All the Time = 1 [Default] | When in Vehicle = 2
-Config.VehicleAccess = 1
+Config.VehicleAccess = 0
 
 --This determines if the vehicle options are avaiable, these include: Fix, Clean, Delete
-Config.VehicleOptions = true
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Config.VehicleOptions = false
 
 ---------------------------------------------------------------
 --                                                           --
@@ -568,10 +456,10 @@ Config.VehicleOptions = true
 
 --This sets which players can access the emote menu
 --Disabled = 0 | Everyone = 1 [Default]
-Config.EmoteAccess = 1
+Config.EmoteAccess = 0
 
 --This sets if a help message is displayed when playing an emote
-Config.EmoteHelp = true
+Config.EmoteHelp = false
 
 --These are the emotes avaiable via the menu and the '/emotes' & '/emote [Emote]' commands
 Config.EmotesList = {
